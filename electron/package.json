@@ -1,0 +1,13 @@
+{
+  "name": "Анализатор Волновой Объектов Класса Артефакт, модель 90",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^38.0.0",
+    "lowdb": "^7.0.1"
+  },
+  "type": "commonjs"
+}

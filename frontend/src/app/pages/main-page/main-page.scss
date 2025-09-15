@@ -1,0 +1,16 @@
+.content-container {
+  width: calc(100% - 120px);
+  height: calc(100% - 320px);
+  padding: 60px;
+}
+.content-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../../../assets/cs_pic.svg") no-repeat center center;
+  background-size: cover;
+  background-position: center 5px;
+  opacity: 0.3; /* прозрачность */
+  z-index: -1;
+  max-height: 100%;
+}

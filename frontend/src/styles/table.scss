@@ -1,0 +1,33 @@
+@use "@angular/material" as mat;
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.table-overrides(
+    (
+      background-color: transparent,
+      row-item-outline-width: 2px,
+      header-headline-color: black,
+      row-item-label-text-color: black,
+      row-item-outline-color: black,
+      header-headline-line-height: 100%,
+      header-headline-size: 48px,
+      header-headline-tracking: 3px,
+      header-headline-weight: 900,
+      row-item-label-text-line-height: 100%,
+      row-item-label-text-size: 24px,
+      row-item-label-text-tracking: 1px,
+      row-item-label-text-weight: 600,
+      footer-supporting-text-line-height: 100%,
+      footer-supporting-text-size: 24px,
+      footer-supporting-text-tracking: 1px,
+      footer-supporting-text-weight: 600,
+      header-container-height: 60px,
+      row-item-container-height: 60px,
+      footer-container-height: 60px,
+    )
+  );
+
+  .foot {
+    border-top: 2px solid black;
+  }
+}

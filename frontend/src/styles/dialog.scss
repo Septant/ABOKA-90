@@ -1,0 +1,26 @@
+@use "@angular/material" as mat;
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.dialog-overrides(
+    (
+      content-padding: 25px,
+      container-max-width: 1000px,
+      container-shape: 25px,
+      container-color: #b1bcce,
+    )
+  );
+
+  .dialog-close-icon {
+    cursor: pointer;
+    color: #5d5e6d;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+  }
+
+  .mat-mdc-dialog-content.mdc-dialog__content {
+    height: 900px;
+  }
+}

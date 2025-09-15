@@ -1,0 +1,31 @@
+<mat-icon
+  fontIcon="close"
+  class="dialog-close-icon"
+  mat-dialog-close
+></mat-icon>
+
+<div class="dialog-container">
+  @if(!videoSrc) {
+  <button class="big-button" matButton="filled" (click)="startScan()">
+    Сканировать
+  </button>
+  } @else {
+  <div>
+    <video
+      class="video-container"
+      #videoPlayer
+      [src]="videoSrc"
+      autoplay
+      (ended)="onVideoEnded()"
+      playsinline
+      muted
+      disablePictureInPicture
+      controlsList="nodownload noplaybackrate nofullscreen"
+    ></video>
+  </div>
+  } @if(isFinished()) {
+  <button matButton="filled" class="finish-button" (click)="finishScan()">
+    Завершить сканирование
+  </button>
+  }
+</div>

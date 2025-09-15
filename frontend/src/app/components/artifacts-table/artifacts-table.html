@@ -1,0 +1,73 @@
+@let data = (data$ | async) || []; @if(isLoading) {
+<div class="spinner-overlay">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+}
+<table mat-table [dataSource]="data" class="artifacts-table">
+  <ng-container matColumnDef="idx">
+    <th mat-header-cell *matHeaderCellDef>No.</th>
+    <td mat-cell *matCellDef="let element">{{element.idx}}</td>
+    <td mat-footer-cell class="foot" *matFooterCellDef></td>
+  </ng-container>
+
+  <ng-container matColumnDef="artifact">
+    <th mat-header-cell *matHeaderCellDef>Артефакт</th>
+
+    <td mat-cell *matCellDef="let element">
+      @if(editingArtifactId !== element.idx) {
+      <div
+        class="artifact"
+        (contextmenu)="onArtifactRightClick($event, element)"
+      >
+        <span (click)="onArtifactClick(element)">{{element.artifact}}</span>
+      </div>
+      } @else {
+      <input
+        #editingElem
+        matInput
+        class="input-field"
+        [(ngModel)]="editingArtifactName"
+        (keyup.enter)="onEditConfirm(element)"
+        (blur)="onEditCancel()"
+        autofocus
+      />
+      }
+    </td>
+
+    <td mat-footer-cell class="foot" *matFooterCellDef>
+      @if(!isAdding) {
+      <div class="artifact" (click)="onArtifactFooterClick()">
+        Добавить артефакт
+      </div>
+      } @else {
+      <input
+        #addingElem
+        class="input-field"
+        matInput
+        placeholder="Новый артефакт"
+        [(ngModel)]="newArtifactValue"
+        (keyup.enter)="onAddConfirm(data.length)"
+        (blur)="onAddCancel()"
+        autofocus
+      />}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="scan">
+    <th mat-header-cell *matHeaderCellDef>Сканирование</th>
+    <td mat-cell *matCellDef="let element">
+      {{element.scan ? (element.scan.date | date :'dd.MM.yyyy HH:mm:ss') : ''}}
+    </td>
+    <td mat-footer-cell class="foot" *matFooterCellDef></td>
+  </ng-container>
+
+  <ng-container matColumnDef="report">
+    <th mat-header-cell *matHeaderCellDef>Отчёт</th>
+    <td mat-cell *matCellDef="let element">{{element.history}}</td>
+    <td mat-footer-cell class="foot" *matFooterCellDef></td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>

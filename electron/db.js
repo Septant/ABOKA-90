@@ -1,6 +1,5 @@
-const path = require("path");
 const { Low } = require("lowdb");
-const { JSONFile } = require("lowdb/node"); // важно: /node для Node.js среды
+const { JSONFile } = require("lowdb/node");
 
 let db;
 
@@ -10,81 +9,76 @@ function initLowDB(dbPath) {
   return db;
 }
 
-// Инициализация базы данных
 async function initDB() {
   await db.read();
-
-  // Если базы ещё нет — создаём структуру
   db.data ||= { artifacts: [] };
 
-  // Первые 5 артов, которые нельзя менять
-  const initialArtifacts = [
-    "Батарейка",
-    "Компас",
-    "Кристалл",
-    "Мамины бусы",
-    "Синяя капля",
-  ];
+  if (!db.data.artifacts.length) {
+    const initialArtifacts = [
+      "Батарейка",
+      "Компас",
+      "Кристалл",
+      "Мамины бусы",
+      "Синяя капля",
+    ];
 
-  initialArtifacts.forEach((name) => {
-    if (!db.data.artifacts.find((a) => a.name === name)) {
-      db.data.artifacts.push({
-        name,
-        scanHistory: [], // Массив сканирований
-        report: "", // Отчёт
-        createdBySystem: true, // Нельзя редактировать
-      });
-    }
-  });
-
-  await db.write();
+    initialArtifacts.forEach((name, idx) => {
+      if (!db.data.artifacts.find((a) => a.name === name)) {
+        db.data.artifacts.push({
+          idx: idx + 1,
+          artifact: name,
+          scan: {},
+          report: "",
+          createdBySystem: true,
+        });
+      }
+    });
+    await db.write();
+  }
 }
 
-// Добавление нового артефакта
-async function addArtifact(name) {
-  await db.read();
-  db.data.artifacts.push({
-    name,
-    scanHistory: [],
-    report: "",
-    createdBySystem: false,
-  });
-  await db.write();
-}
-
-// Добавление записи о сканировании
-async function addScan(artifactName, videoFile) {
-  await db.read();
-  const artifact = db.data.artifacts.find((a) => a.name === artifactName);
-  if (!artifact) return;
-  artifact.scanHistory.push({
-    datetime: new Date().toISOString(),
-    video: videoFile,
-  });
-  await db.write();
-}
-
-// Обновление отчёта
-async function updateReport(artifactName, reportText) {
-  await db.read();
-  const artifact = db.data.artifacts.find((a) => a.name === artifactName);
-  if (!artifact) return;
-  artifact.report = reportText;
-  await db.write();
-}
-
-// Получение всех артефактов
 async function getArtifacts() {
   await db.read();
   return db.data.artifacts;
 }
 
-// Экспорт функций
+async function addArtifact(artifact) {
+  await db.read();
+  db.data.artifacts.push({
+    ...artifact,
+    createdBySystem: false,
+  });
+  await db.write();
+  return db.data.artifacts;
+}
+
+async function updateArtifactName({ artifactId, newName }) {
+  await db.read();
+  const found = db.data.artifacts.find((art) => art.idx === artifactId);
+  found.artifact = newName;
+
+  await db.write();
+  return db.data.artifacts;
+}
+
+async function updateArtifactScan(artifactId, scanData) {
+  await db.read();
+  const artifact = db.data.artifacts.find((a) => a.idx === artifactId);
+
+  console.log("arti", artifact, artifactId, scanData);
+  if (artifact) {
+    artifact.scan.date = scanData.date;
+    artifact.scan.src = scanData.videoPath;
+    await db.write();
+  }
+  console.log(db.data, "ddd");
+  return true;
+}
 module.exports = {
   initLowDB,
   initDB,
-  addArtifact,
-  addScan,
-  updateReport,
   getArtifacts,
+  addArtifact,
+  updateArtifactName,
+  updateArtifactScan,
 };
