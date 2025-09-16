@@ -6,7 +6,6 @@ const isDev = !app.isPackaged;
 
 async function createWindow() {
   const dbPath = path.join(app.getPath("userData"), "db.json");
-  console.log(dbPath);
   // Инициализация базы данных
   dbModule.initLowDB(dbPath); // ИМЕННО initLowDB, а не createDB
   await dbModule.initDB(); // Инициализация данных
@@ -24,7 +23,6 @@ async function createWindow() {
     },
   });
 
-  console.log(isDev);
   if (isDev) {
     win.loadURL("http://localhost:4200"); // Angular dev сервер
   } else {
@@ -35,7 +33,6 @@ async function createWindow() {
       "browser",
       "index.html"
     );
-    console.log("Loading index.html from:", indexPath);
     win.loadFile(indexPath);
   }
 }

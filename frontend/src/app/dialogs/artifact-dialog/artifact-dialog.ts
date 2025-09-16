@@ -50,7 +50,6 @@ export class ArtifactDialog {
   constructor(@Inject(MAT_DIALOG_DATA) public artifact: Artifact) {}
 
   async startScan() {
-    console.log('sss');
     this.isFinished.set(false);
     this.videoSrc = null;
     this.videoSrc = await this.dataService.getRandomArtifactVideo(

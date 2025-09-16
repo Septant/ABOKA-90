@@ -65,7 +65,6 @@ async function updateArtifactScan(artifactId, scanData) {
   await db.read();
   const artifact = db.data.artifacts.find((a) => a.idx === artifactId);
 
-  console.log(scanData, artifact)
   if (artifact) {
     artifact.scan.date = scanData.date;
     artifact.scan.src = scanData.src;

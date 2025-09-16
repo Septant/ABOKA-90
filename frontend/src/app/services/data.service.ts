@@ -22,7 +22,6 @@ export class DataService {
   }
 
   updateArtifactScan(idx: number, date: Date, src: string) {
-    console.log(idx, date, src);
     return (window as any).api.updateArtifactScan(idx, {
       date,
       src,
