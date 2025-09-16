@@ -36,7 +36,7 @@ import { ReportViewMode } from '../../../meta/report-view-mode.type';
 export class ArtifactsTable implements OnInit {
   private dataService = inject(DataService);
   private dialog = inject(MatDialog);
-
+  private _cdr = inject(ChangeDetectorRef);
   @ViewChild('addingElem') inputAddField!: ElementRef<HTMLInputElement>;
   @ViewChild('editingElem') inputEditField!: ElementRef<HTMLInputElement>;
   displayedColumns: string[] = ['idx', 'artifact', 'scan', 'report'];
@@ -55,9 +55,10 @@ export class ArtifactsTable implements OnInit {
 
   loadData() {
     this.isLoading = true;
-    this.data$ = this.dataService
-      .loadArtifacts()
-      .finally(() => (this.isLoading = false));
+    this.data$ = this.dataService.loadArtifacts().finally(() => {
+      this.isLoading = false;
+      this._cdr.markForCheck();
+    });
   }
 
   onArtifactClick(element: Artifact) {
@@ -71,7 +72,7 @@ export class ArtifactsTable implements OnInit {
       .afterClosed()
       .subscribe((response: any) => {
         if (response === 'success') {
-          this.loadData();
+          setTimeout(() => this.loadData());
         }
       });
   }
@@ -93,6 +94,7 @@ export class ArtifactsTable implements OnInit {
       .addArtifact({
         idx: dataLength + 1,
         artifact: this.newArtifactValue,
+        scan: {} as { date: Date; src: string },
         report: '',
         createdBySystem: false,
       })
@@ -160,7 +162,7 @@ export class ArtifactsTable implements OnInit {
       .afterClosed()
       .subscribe((response) => {
         if (response === 'success') {
-          this.loadData();
+          setTimeout(() => this.loadData());
         }
       });
   }

@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "ng:build": "cd frontend && ng build --base-href ./ && rm -rf ../electron/dist && cp -r dist/frontend ../electron/dist",
     "electron:serve": "cd frontend && ng serve",
     "electron:start": "cd electron && electron .",
