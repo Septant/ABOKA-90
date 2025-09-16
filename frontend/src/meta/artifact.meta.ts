@@ -3,7 +3,7 @@ export interface Artifact {
   artifact: string;
   scan?: {
     date: Date;
-    videoPath: string;
+    src: string;
   };
   report: string | null;
   createdBySystem: boolean;

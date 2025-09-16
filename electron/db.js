@@ -65,13 +65,21 @@ async function updateArtifactScan(artifactId, scanData) {
   await db.read();
   const artifact = db.data.artifacts.find((a) => a.idx === artifactId);
 
-  console.log("arti", artifact, artifactId, scanData);
   if (artifact) {
     artifact.scan.date = scanData.date;
-    artifact.scan.src = scanData.videoPath;
+    artifact.scan.src = scanData.src;
     await db.write();
   }
-  console.log(db.data, "ddd");
+  return true;
+}
+
+async function updateArtifactReport(artifactId, report) {
+  await db.read();
+  const artifact = db.data.artifacts.find((a) => a.idx === artifactId);
+  if (artifact) {
+    artifact.report = report;
+    await db.write();
+  }
   return true;
 }
 module.exports = {
@@ -81,4 +89,5 @@ module.exports = {
   addArtifact,
   updateArtifactName,
   updateArtifactScan,
+  updateArtifactReport,
 };

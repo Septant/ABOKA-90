@@ -15,6 +15,9 @@ import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ArtifactDialog } from '../../dialogs/artifact-dialog/artifact-dialog';
+import { ScanDialog } from '../../dialogs/scan-dialog/scan-dialog';
+import { ReportDialog } from '../../dialogs/report-dialog/report-dialog';
+import { ReportViewMode } from '../../../meta/report-view-mode.type';
 
 @Component({
   selector: 'app-artifacts-table',
@@ -46,7 +49,7 @@ export class ArtifactsTable implements OnInit {
   editingArtifactId: number | null = null;
   editingArtifactName: string = '';
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadData();
   }
 
@@ -66,7 +69,7 @@ export class ArtifactsTable implements OnInit {
         data: element,
       })
       .afterClosed()
-      .subscribe(async (response: any) => {
+      .subscribe((response: any) => {
         if (response === 'success') {
           this.loadData();
         }
@@ -133,5 +136,32 @@ export class ArtifactsTable implements OnInit {
   onEditCancel() {
     this.editingArtifactId = null;
     this.editingArtifactName = '';
+  }
+
+  onArtifactScanClick(element: Artifact) {
+    if (element.scan?.date) {
+      this.dialog.open(ScanDialog, {
+        data: element,
+        disableClose: true,
+        width: '1000px',
+        height: '900px',
+      });
+    }
+  }
+
+  onArtifactReportCLick(mode: ReportViewMode, element: Artifact) {
+    this.dialog
+      .open(ReportDialog, {
+        width: '1000px',
+        height: '900px',
+        disableClose: true,
+        data: { mode, artifact: element },
+      })
+      .afterClosed()
+      .subscribe((response) => {
+        if (response === 'success') {
+          this.loadData();
+        }
+      });
   }
 }

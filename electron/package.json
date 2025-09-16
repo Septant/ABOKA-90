@@ -1,13 +1,39 @@
 {
-  "name": "Анализатор Волновой Объектов Класса Артефакт, модель 90",
+  "name": "aboka-90",
+  "productName": "Анализатор Волновой Объектов Класса Артефакт, модель 90",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "ng:build": "cd frontend && ng build --base-href ./ && rm -rf ../electron/dist && cp -r dist/frontend ../electron/dist",
+    "electron:serve": "cd frontend && ng serve",
+    "electron:start": "cd electron && electron .",
+    "electron:build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.aboka90.app",
+    "productName": "Анализатор Волновой Объектов Класса Артефакт, модель 90",
+    "files": [
+      "main.js",
+      "preload.js",
+      "db.js",
+      "dist/**",
+      "assets/**"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "programm"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/icons/app.ico"
+    }
   },
   "dependencies": {
-    "electron": "^38.0.0",
     "lowdb": "^7.0.1"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^24.0.0"
   },
   "type": "commonjs"
 }

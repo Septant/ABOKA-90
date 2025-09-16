@@ -9,4 +9,6 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("getRandomArtifactVideo", artifactName),
   updateArtifactScan: (artifactId, scanData) =>
     ipcRenderer.invoke("updateArtifactScan", { artifactId, scanData }),
+  updateArtifactReport: (artifactId, report) =>
+    ipcRenderer.invoke("updateArtifactReport", { artifactId, report }),
 });

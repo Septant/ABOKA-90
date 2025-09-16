@@ -1,0 +1,44 @@
+<mat-icon
+  fontIcon="close"
+  class="dialog-close-icon"
+  mat-dialog-close
+></mat-icon>
+
+<div class="dialog-container">
+  <h1 class="header-text">
+    Отчёт о сканировании артефакта «{{data.artifact.artifact}}» сканером
+    ABOKA-90, {{data.artifact.scan?.date | date: 'dd.MM.yyyy HH:mm:ss'}}.
+  </h1>
+
+  <form [formGroup]="reportForm">
+    <mat-form-field class="textfield-container">
+      <mat-label>Форма ввода</mat-label>
+      <textarea
+        matInput
+        formControlName="report"
+        placeholder="Введите текст"
+        [readonly]="data.mode === 'watch'"
+        [ngStyle]="{'user-select': data.mode ==='watch' ? 'none' : 'default'}"
+      ></textarea>
+      @if(reportForm.get('report')?.hasError('required')){
+      <mat-error>Заполните форму</mat-error>
+      }
+    </mat-form-field>
+  </form>
+  @switch (data.mode) { @case ('create') {
+  <button
+    matButton="filled"
+    (click)="updateReport()"
+    [disabled]="!reportForm.valid"
+  >
+    Сохранить</button
+  >} @case ('update') {
+  <button
+    matButton="filled"
+    (click)="updateReport()"
+    [disabled]="!reportForm.valid"
+  >
+    Сохранить</button
+  >} @case ('watch') {
+  <button matButton="filled" mat-dialog-close>Закрыть</button>}}
+</div>

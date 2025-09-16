@@ -1,0 +1,20 @@
+<mat-icon
+  fontIcon="close"
+  class="dialog-close-icon"
+  mat-dialog-close
+></mat-icon>
+
+<div class="dialog-container">
+  @if(!videoPlay()) {
+  <button class="big-button" matButton="filled" (click)="watchScan()">
+    Просмотреть
+  </button>
+  } @else {
+  <h1>Артефакт: «{{artifact.artifact}}»</h1>
+  <app-video-player
+    [videoSrc]="artifact.scan!.src"
+    (videoFinished)="onVideoFinished()"
+  />
+
+  }
+</div>

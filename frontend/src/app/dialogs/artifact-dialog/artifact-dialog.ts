@@ -16,55 +16,67 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { Artifact } from '../../../meta/artifact.meta';
 import { DataService } from '../../services/data.service';
+import { VideoPlayer } from '../../components/video-player/video-player';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map, timer } from 'rxjs';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { HackService } from '../../services/hack.service';
 
 @Component({
   selector: 'app-artifact-dialog',
-  imports: [MatIcon, MatDialogClose, MatButton],
+  imports: [
+    MatIcon,
+    MatDialogClose,
+    MatButton,
+    VideoPlayer,
+    AsyncPipe,
+    DatePipe,
+  ],
   templateUrl: './artifact-dialog.html',
   styleUrl: './artifact-dialog.scss',
 })
 export class ArtifactDialog {
   private dialogRef = inject(MatDialogRef<ArtifactDialog>);
   private dataService = inject(DataService);
-  private _cdr = inject(ChangeDetectorRef);
-
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  public hackService = inject(HackService);
+  dateNow$ = timer(0, 1000).pipe(
+    map(() => new Date()),
+    takeUntilDestroyed()
+  );
   videoSrc: string | null = null;
-  repeatCount = 0;
+
   isFinished = signal(false);
 
   constructor(@Inject(MAT_DIALOG_DATA) public artifact: Artifact) {}
 
   async startScan() {
-    this.repeatCount = 0;
+    console.log('sss');
     this.isFinished.set(false);
-    this.videoSrc = await this.dataService
-      .getRandomArtifactVideo(this.artifact.artifact)
-      .then((ref: any) => {
-        console.log(ref);
-        return ref;
-      });
-  }
+    this.videoSrc = null;
+    this.videoSrc = await this.dataService.getRandomArtifactVideo(
+      this.artifact.artifact
+    );
 
-  onVideoEnded() {
-    this.repeatCount++;
-    if (this.repeatCount < 3) {
-      this.videoPlayer.nativeElement.play();
-    } else {
-      this.isFinished.set(true);
-    }
+    this.videoSrc = `${this.videoSrc}?t=${Date.now()}`;
   }
 
   async finishScan() {
     await this.dataService
-      .updateArtifactScan(this.artifact.idx!, new Date(), this.videoSrc!)
+      .updateArtifactScan(
+        this.artifact.idx!,
+        new Date(),
+        this.videoSrc!.substring(0, this.videoSrc!.indexOf('?'))
+      )
       .then((response: boolean) => {
         if (response) {
           this.videoSrc = null;
           this.isFinished.set(false);
-          this._cdr.detectChanges();
           this.dialogRef.close('success');
         }
       });
+  }
+
+  onVideoFinished() {
+    this.isFinished.set(true);
   }
 }

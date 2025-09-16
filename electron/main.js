@@ -12,8 +12,9 @@ async function createWindow() {
   await dbModule.initDB(); // Инициализация данных
 
   const win = new BrowserWindow({
-    width: 2560,
-    height: 1440,
+    // width: 2560,
+    // height: 1440,
+    fullscreen: true,
     icon: path.join(__dirname, "assets/icons/clear-sky.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -52,13 +53,12 @@ app.on("window-all-closed", function () {
 });
 
 // IPC обработчики для Angular
-ipcMain.handle("get-artifacts", async () => {
-  return await dbModule.getArtifacts();
-});
+ipcMain.handle("get-artifacts", async () => await dbModule.getArtifacts());
 
-ipcMain.handle("add-artifact", async (event, artifact) => {
-  return await dbModule.addArtifact(artifact);
-});
+ipcMain.handle(
+  "add-artifact",
+  async (event, artifact) => await dbModule.addArtifact(artifact)
+);
 
 ipcMain.handle("update-artifact", async (event, { artifactId, newName }) => {
   return await dbModule.updateArtifactName({ artifactId, newName });
@@ -84,4 +84,10 @@ ipcMain.handle(
   "updateArtifactScan",
   async (event, { artifactId, scanData }) =>
     await dbModule.updateArtifactScan(artifactId, scanData)
+);
+
+ipcMain.handle(
+  "updateArtifactReport",
+  async (event, { artifactId, report }) =>
+    await dbModule.updateArtifactReport(artifactId, report)
 );

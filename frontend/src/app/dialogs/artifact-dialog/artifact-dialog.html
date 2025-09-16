@@ -1,3 +1,5 @@
+@let fixedState = hackService.fixedState$ | async;
+
 <mat-icon
   fontIcon="close"
   class="dialog-close-icon"
@@ -5,27 +7,25 @@
 ></mat-icon>
 
 <div class="dialog-container">
-  @if(!videoSrc) {
+  @if(fixedState) { @if(!videoSrc) {
   <button class="big-button" matButton="filled" (click)="startScan()">
     Сканировать
   </button>
   } @else {
-  <div>
-    <video
-      class="video-container"
-      #videoPlayer
-      [src]="videoSrc"
-      autoplay
-      (ended)="onVideoEnded()"
-      playsinline
-      muted
-      disablePictureInPicture
-      controlsList="nodownload noplaybackrate nofullscreen"
-    ></video>
-  </div>
+  <h1>
+    «{{artifact.artifact}}»: {{dateNow$ | async | date:'HH:mm:ss dd.MM.yyyy' }}
+  </h1>
+  <app-video-player [videoSrc]="videoSrc" (videoFinished)="onVideoFinished()" />
+
   } @if(isFinished()) {
-  <button matButton="filled" class="finish-button" (click)="finishScan()">
-    Завершить сканирование
-  </button>
-  }
+  <div class="buttons-block">
+    <button matButton="filled" class="finish-button" (click)="startScan()">
+      Повторить
+    </button>
+    <button matButton="filled" class="finish-button" (click)="finishScan()">
+      Сохранить
+    </button>
+  </div>
+
+  } } @else { СЛОМАНО }
 </div>

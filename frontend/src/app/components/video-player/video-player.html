@@ -1,0 +1,11 @@
+<video
+  class="video-container"
+  #videoPlayer
+  [src]="videoSrc"
+  autoplay
+  (ended)="onVideoEnded()"
+  playsinline
+  muted
+  disablePictureInPicture
+  controlsList="nodownload noplaybackrate nofullscreen"
+></video>

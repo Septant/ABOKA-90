@@ -21,11 +21,14 @@ export class DataService {
     return (window as any).api.getRandomArtifactVideo(artifact);
   }
 
-  updateArtifactScan(idx: number, date: Date, videoPath: string) {
-    console.log(idx, date, videoPath);
+  updateArtifactScan(idx: number, date: Date, src: string) {
     return (window as any).api.updateArtifactScan(idx, {
       date,
-      videoPath,
+      src,
     });
+  }
+
+  updateArtifactReport(idx: number, report: string) {
+    return (window as any).api.updateArtifactReport(idx, report);
   }
 }

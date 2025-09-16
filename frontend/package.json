@@ -1,11 +1,12 @@
 {
-  "name": "Анализатор Волновой Объектов Класса Артефакт, модель 90",
-  "version": "0.0.0",
+  "name": "ABOKA-90",
+  "productName": "Анализатор Волновой Объектов Класса Артефакт, модель 90",
+  "version": "1.0.0",
   "main": "electron/main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production --base-href ./",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "start-electron": "concurrently \"ng serve\" \"cd ../electron && npm start\"",
