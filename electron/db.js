@@ -82,6 +82,14 @@ async function updateArtifactReport(artifactId, report) {
   }
   return true;
 }
+
+async function dropDB() {
+  await db.read();
+  db.data = { artifacts: [] }; // «обнулили» БД
+  await db.write();
+  await initDB();
+  return true;
+}
 module.exports = {
   initLowDB,
   initDB,
@@ -90,4 +98,5 @@ module.exports = {
   updateArtifactName,
   updateArtifactScan,
   updateArtifactReport,
+  dropDB,
 };

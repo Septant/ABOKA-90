@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Artifact } from '../../meta/artifact.meta';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
+  updateDataTrigger$ = new BehaviorSubject<void>(undefined);
   loadArtifacts() {
     return (window as any).api.getArtifacts();
   }

@@ -88,3 +88,5 @@ ipcMain.handle(
   async (event, { artifactId, report }) =>
     await dbModule.updateArtifactReport(artifactId, report)
 );
+
+ipcMain.handle("dropDB", async (event) => await dbModule.dropDB());

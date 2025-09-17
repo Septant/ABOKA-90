@@ -11,4 +11,5 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("updateArtifactScan", { artifactId, scanData }),
   updateArtifactReport: (artifactId, report) =>
     ipcRenderer.invoke("updateArtifactReport", { artifactId, report }),
+  dropDB: () => ipcRenderer.invoke("dropDB"),
 });

@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   inject,
   OnInit,
@@ -8,7 +9,7 @@ import {
 } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { DataService } from '../../services/data.service';
-import { AsyncPipe, CommonModule, DatePipe, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { Artifact } from '../../../meta/artifact.meta';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +19,8 @@ import { ArtifactDialog } from '../../dialogs/artifact-dialog/artifact-dialog';
 import { ScanDialog } from '../../dialogs/scan-dialog/scan-dialog';
 import { ReportDialog } from '../../dialogs/report-dialog/report-dialog';
 import { ReportViewMode } from '../../../meta/report-view-mode.type';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-artifacts-table',
@@ -28,6 +31,7 @@ import { ReportViewMode } from '../../../meta/report-view-mode.type';
     MatInput,
     MatProgressSpinner,
     DatePipe,
+    ScrollingModule,
   ],
   providers: [DatePipe],
   templateUrl: './artifacts-table.html',
@@ -37,6 +41,8 @@ export class ArtifactsTable implements OnInit {
   private dataService = inject(DataService);
   private dialog = inject(MatDialog);
   private _cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+
   @ViewChild('addingElem') inputAddField!: ElementRef<HTMLInputElement>;
   @ViewChild('editingElem') inputEditField!: ElementRef<HTMLInputElement>;
   displayedColumns: string[] = ['idx', 'artifact', 'scan', 'report'];
@@ -50,7 +56,12 @@ export class ArtifactsTable implements OnInit {
   editingArtifactName: string = '';
 
   ngOnInit() {
-    this.loadData();
+    this.dataService.updateDataTrigger$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadData();
+        this._cdr.markForCheck();
+      });
   }
 
   loadData() {
@@ -72,7 +83,7 @@ export class ArtifactsTable implements OnInit {
       .afterClosed()
       .subscribe((response: any) => {
         if (response === 'success') {
-          setTimeout(() => this.loadData());
+          this.dataService.updateDataTrigger$.next();
         }
       });
   }
@@ -80,7 +91,7 @@ export class ArtifactsTable implements OnInit {
   onArtifactFooterClick() {
     this.isAdding = true;
     this.newArtifactValue = '';
-    setTimeout(() => this.inputAddField.nativeElement.focus(), 0);
+    setTimeout(() => this.inputAddField.nativeElement.focus());
   }
 
   onAddConfirm(dataLength: number) {
@@ -112,7 +123,7 @@ export class ArtifactsTable implements OnInit {
   onArtifactRightClick(e: Event, element: Artifact) {
     e.preventDefault();
     if (element.createdBySystem) return;
-    setTimeout(() => this.inputEditField.nativeElement.focus(), 0);
+    setTimeout(() => this.inputEditField.nativeElement.focus());
     this.editingArtifactId = element.idx;
     this.editingArtifactName = element.artifact;
   }
@@ -162,7 +173,7 @@ export class ArtifactsTable implements OnInit {
       .afterClosed()
       .subscribe((response) => {
         if (response === 'success') {
-          setTimeout(() => this.loadData());
+          this.dataService.updateDataTrigger$.next();
         }
       });
   }

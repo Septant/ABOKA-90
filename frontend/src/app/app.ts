@@ -35,4 +35,8 @@ export class App {
       }
     }
   }
+
+  dropDB() {
+    this.hackService.dropDB();
+  }
 }
