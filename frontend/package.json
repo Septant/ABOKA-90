@@ -9,8 +9,7 @@
     "build": "ng build --configuration production --base-href ./",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start-electron": "concurrently \"ng serve\" \"cd ../electron && npm start\"",
-    "build:electron": "ng build --configuration production --base-href && rimraf ../electron/dist && cpx \"dist/frontend/**/*\" ../electron/dist"
+    "start-electron": "concurrently \"ng serve\" \"cd ../electron && npm start\""
   },
   "private": true,
   "dependencies": {

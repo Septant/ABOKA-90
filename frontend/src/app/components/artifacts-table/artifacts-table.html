@@ -3,7 +3,7 @@
   <mat-spinner diameter="40"></mat-spinner>
 </div>
 }
-<!-- <div class="container"> -->
+
 <cdk-virtual-scroll-viewport itemSize="48" class="table-viewport">
   <table mat-table [dataSource]="data" class="artifacts-table">
     <ng-container matColumnDef="idx">
@@ -105,5 +105,5 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
   </table>
-  <!-- </div> -->
+  
 </cdk-virtual-scroll-viewport>
